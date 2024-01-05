@@ -27,16 +27,35 @@ const useIdle = (
       }
     }
 
-    // const onEvent = throttle(ms,()=>{
-    //   if(localState){
-    //     set(false);
-    //   }
-    //   clearTimeout(timeout);
-    //   timeout = setTimeout(() => set(true), ms);
-    // });
+    const onEvent = throttle(50,()=>{
+      if(localState){
+        set(false);
+      }
+      clearTimeout(timeout);
+      timeout = setTimeout(() => set(true), ms);
+    });
+
+    const onVisibility = ()=>{
+      if(!document.hidden){
+        onEvent();
+      }
+    }
+
+    for(let i = 0; i < events.length; i++){
+      on(document, events[i], onEvent);
+    }
+
+    on(document,'visibilitychange',onVisibility);
+
+    timeout = setTimeout(() => set(true), ms);
 
     return () => {
       mounted = false;
+
+      for (let i = 0; i < events.length; i++) {
+        off(window, events[i], onEvent);
+      }
+      off(document, 'visibilitychange', onVisibility);
     }
   },[]);
 }
