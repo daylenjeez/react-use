@@ -11,7 +11,7 @@ it('should run provided effect only once', () => {
   expect(mockEffectCallback).toHaveBeenCalledTimes(1);
 
   rerender();
-  //重新渲染 调用一次
+  //重新渲染不会调用，总调用次数还是 1
   expect(mockEffectCallback).toHaveBeenCalledTimes(1);
 });
 
